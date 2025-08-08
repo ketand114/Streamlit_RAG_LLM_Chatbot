@@ -1,0 +1,9 @@
+streamlit
+openai
+langchain
+langchain-openai
+langchain-anthropic
+langchain-together
+langchain-perplexity
+langchain-community
+langchain-groq
