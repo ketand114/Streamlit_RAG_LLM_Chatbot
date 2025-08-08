@@ -10,7 +10,7 @@ langchain-community
 langchain-groq
 chromadb
 sentence-transformers
-langchain.vectorstores
+langchain-community
 langchain.storage
 langchain.schema
 langchain.retrievers.multi_vector
