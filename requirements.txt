@@ -11,9 +11,3 @@ langchain-groq
 chromadb
 sentence-transformers
 langchain-community
-langchain.storage
-langchain.schema
-langchain.retrievers.multi_vector
-langchain.prompts
-langchain_core.output_parsers
-langchain_core.runnables
