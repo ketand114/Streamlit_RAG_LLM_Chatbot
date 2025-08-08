@@ -9,8 +9,7 @@ langchain-perplexity
 langchain-community
 langchain-groq
 chromadb
-uuid
-base64
+sentence-transformers
 langchain.vectorstores
 langchain.storage
 langchain.schema
