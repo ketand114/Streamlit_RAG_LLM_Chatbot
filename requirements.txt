@@ -1,5 +1,6 @@
 streamlit
 openai
+pysqlite3-binary
 langchain
 langchain_core
 langchain-openai
