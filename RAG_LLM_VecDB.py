@@ -84,7 +84,9 @@ if api_key:
 
 if model and json_file:
     # Load JSON data
-    data = json.load(json_file)
+    #data = json.load(json_file)
+    with open(json_file, "r", encoding="utf-8") as f:
+        data = json.load(f)
     texts = data.get("texts", [])
     tables = data.get("tables", [])
     images = data.get("images", [])
