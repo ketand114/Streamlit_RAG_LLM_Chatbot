@@ -8,7 +8,7 @@ langchain-together
 langchain-perplexity
 langchain-community
 langchain-groq
-json
+chromadb
 uuid
 base64
 langchain.vectorstores
