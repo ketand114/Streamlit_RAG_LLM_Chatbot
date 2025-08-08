@@ -3,7 +3,11 @@ import streamlit as st
 import json
 import uuid
 from base64 import b64decode
-from langchain.vectorstores import Chroma
+import sys
+import pysqlite3
+sys.modules["sqlite3"] = pysqlite3
+#from langchain.vectorstores import Chroma
+from langchain_community.vectorstores import Chroma
 from langchain.storage import InMemoryStore
 from langchain.schema import Document
 from langchain.retrievers.multi_vector import MultiVectorRetriever
