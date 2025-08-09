@@ -97,20 +97,25 @@ def index_items(items, summary_key, content_key=None):
     # Summaries for vector search
     summaries = [
         Document(
-            page_content=item.get(summary_key, ""),
+            page_content=str(item.get(summary_key, "")),  # Ensure string
             metadata={id_key: ids[i]}
         )
         for i, item in enumerate(items)
     ]
     retriever.vectorstore.add_documents(summaries)
+
     # Full docs for retrieval
-    full_docs = [
-        Document(
-            page_content=item.get(content_key, item.get(summary_key, "")),
-            metadata=item
+    full_docs = []
+    for item in items:
+        raw_content = item.get(content_key, item.get(summary_key, ""))
+        if not isinstance(raw_content, str):
+            raw_content = json.dumps(raw_content, ensure_ascii=False)  # Convert lists/dicts to JSON string
+        full_docs.append(
+            Document(
+                page_content=raw_content,
+                metadata=item
+            )
         )
-        for item in items
-    ]
     retriever.docstore.mset(list(zip(ids, full_docs)))
 
 
