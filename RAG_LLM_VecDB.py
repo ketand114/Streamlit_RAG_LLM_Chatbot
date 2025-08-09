@@ -20,6 +20,7 @@ from langchain_perplexity import ChatPerplexity
 from langchain.prompts import ChatPromptTemplate
 from langchain_core.output_parsers import StrOutputParser
 from langchain_core.runnables import RunnablePassthrough, RunnableLambda
+from langchain_huggingface import HuggingFaceEmbeddings
 
 st.title("🧪 RAG Streamlit Multi-LLM Chat App")
 
