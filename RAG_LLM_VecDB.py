@@ -35,7 +35,8 @@ model_name = st.sidebar.text_input("Model name (optional)", "")
 json_file = "rag_input.json"
 
 model = None
-embedding_model = None
+#embedding_model = None
+embedding_model = HuggingFaceEmbeddings(model_name="sentence-transformers/all-MiniLM-L6-v2")
 
 if api_key:
     try:
