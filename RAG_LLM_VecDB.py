@@ -6,7 +6,6 @@ from base64 import b64decode
 import sys
 import pysqlite3
 sys.modules["sqlite3"] = pysqlite3
-#from langchain.vectorstores import Chroma
 from langchain_community.vectorstores import Chroma
 from langchain.storage import InMemoryStore
 from langchain.schema import Document
@@ -92,6 +91,29 @@ if api_key:
     except Exception as e:
         st.error(f"Error initializing model: {e}")
 
+# Helper to index items
+def index_items(items, summary_key, content_key=None):
+    ids = [str(uuid.uuid4()) for _ in items]
+    # Summaries for vector search
+    summaries = [
+        Document(
+            page_content=item.get(summary_key, ""),
+            metadata={id_key: ids[i]}
+        )
+        for i, item in enumerate(items)
+    ]
+    retriever.vectorstore.add_documents(summaries)
+    # Full docs for retrieval
+    full_docs = [
+        Document(
+            page_content=item.get(content_key, item.get(summary_key, "")),
+            metadata=item
+        )
+        for item in items
+    ]
+    retriever.docstore.mset(list(zip(ids, full_docs)))
+
+
 if model and json_file:
     # Load JSON data
     
@@ -110,33 +132,12 @@ if model and json_file:
     store = InMemoryStore()
     id_key = "doc_id"
     retriever = MultiVectorRetriever(vectorstore=vectorstore, docstore=store, id_key=id_key)
-    
-    # Index texts
-    text_ids = [str(uuid.uuid4()) for _ in texts]
-    text_summaries = [
-        Document(page_content=item.get("summary", "") or item.get("text", ""), metadata={id_key: text_ids[i]})
-        for i, item in enumerate(texts)
-    ]
-    retriever.vectorstore.add_documents(text_summaries)
-    retriever.docstore.mset(list(zip(text_ids, texts)))
-    
-    # Index tables
-    table_ids = [str(uuid.uuid4()) for _ in tables]
-    table_summaries = [
-        Document(page_content=item.get("summary", "") or str(item.get("rows", "")), metadata={id_key: table_ids[i]})
-        for i, item in enumerate(tables)
-    ]
-    retriever.vectorstore.add_documents(table_summaries)
-    retriever.docstore.mset(list(zip(table_ids, tables)))
-    
-    # Index images
-    img_ids = [str(uuid.uuid4()) for _ in images]
-    img_summaries = [
-        Document(page_content=item.get("description", "No description"), metadata={id_key: img_ids[i]})
-        for i, item in enumerate(images)
-    ]
-    retriever.vectorstore.add_documents(img_summaries)
-    retriever.docstore.mset(list(zip(img_ids, images)))
+        
+    # Index each data type
+    index_items(texts, summary_key="summary", content_key="text")
+    index_items(tables, summary_key="summary", content_key="rows")
+    index_items(images, summary_key="description", content_key="description")
+
    
     # Build RAG chain
     def parse_docs(docs):
