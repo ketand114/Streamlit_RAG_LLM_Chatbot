@@ -22,7 +22,7 @@ from langchain_core.runnables import RunnablePassthrough, RunnableLambda
 from langchain_huggingface import HuggingFaceEmbeddings
 from sentence_transformers import SentenceTransformer
 
-st.title("🧪 RAG Streamlit Multi-LLM Chat App")
+st.title("🧪 Test Chat with Thesis Document")
 
 # Sidebar: Choose provider & keys
 provider = st.sidebar.selectbox(
