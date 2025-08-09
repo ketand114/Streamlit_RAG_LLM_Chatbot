@@ -37,7 +37,10 @@ json_file = "rag_input.json"
 
 model = None
 #embedding_model = None
-embedding_model = HuggingFaceEmbeddings(model_name="sentence-transformers/all-MiniLM-L6-v2")
+embedding_model = HuggingFaceEmbeddings(
+    model_name="sentence-transformers/all-MiniLM-L6-v2",
+    model_kwargs={"device": "cpu"}
+)
 
 if api_key:
     try:
