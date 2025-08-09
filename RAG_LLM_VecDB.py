@@ -94,37 +94,50 @@ if api_key:
 
 if model and json_file:
     # Load JSON data
-    #data = json.load(json_file)
+    
     with open(json_file, "r", encoding="utf-8") as f:
         data = json.load(f)
+
     texts = data.get("texts", [])
     tables = data.get("tables", [])
     images = data.get("images", [])
-
-    # Create vector store & retriever
+    
+    # Local embedding model (no API key needed)
+    embedding_model = HuggingFaceEmbeddings(model_name="sentence-transformers/all-MiniLM-L6-v2")
+    
+    # Create Chroma vector store & retriever
     vectorstore = Chroma(collection_name="rag_demo", embedding_function=embedding_model)
     store = InMemoryStore()
     id_key = "doc_id"
     retriever = MultiVectorRetriever(vectorstore=vectorstore, docstore=store, id_key=id_key)
-
+    
     # Index texts
     text_ids = [str(uuid.uuid4()) for _ in texts]
-    summaries = [Document(page_content=item["summary"], metadata={id_key: text_ids[i]}) for i, item in enumerate(texts)]
-    retriever.vectorstore.add_documents(summaries)
+    text_summaries = [
+        Document(page_content=item.get("summary", "") or item.get("text", ""), metadata={id_key: text_ids[i]})
+        for i, item in enumerate(texts)
+    ]
+    retriever.vectorstore.add_documents(text_summaries)
     retriever.docstore.mset(list(zip(text_ids, texts)))
-
+    
     # Index tables
     table_ids = [str(uuid.uuid4()) for _ in tables]
-    summaries = [Document(page_content=item["summary"], metadata={id_key: table_ids[i]}) for i, item in enumerate(tables)]
-    retriever.vectorstore.add_documents(summaries)
+    table_summaries = [
+        Document(page_content=item.get("summary", "") or str(item.get("rows", "")), metadata={id_key: table_ids[i]})
+        for i, item in enumerate(tables)
+    ]
+    retriever.vectorstore.add_documents(table_summaries)
     retriever.docstore.mset(list(zip(table_ids, tables)))
-
+    
     # Index images
     img_ids = [str(uuid.uuid4()) for _ in images]
-    summaries = [Document(page_content=item["description"], metadata={id_key: img_ids[i]}) for i, item in enumerate(images)]
-    retriever.vectorstore.add_documents(summaries)
+    img_summaries = [
+        Document(page_content=item.get("description", "No description"), metadata={id_key: img_ids[i]})
+        for i, item in enumerate(images)
+    ]
+    retriever.vectorstore.add_documents(img_summaries)
     retriever.docstore.mset(list(zip(img_ids, images)))
-
+   
     # Build RAG chain
     def parse_docs(docs):
         """Separate texts and base64 images"""
