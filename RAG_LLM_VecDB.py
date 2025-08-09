@@ -175,7 +175,8 @@ if model and json_file:
         for image in ctx["images"]:
             prompt_content.append({"type": "image_url", "image_url": {"url": f"data:image/jpeg;base64,{image}"}})
 
-        return ChatPromptTemplate.from_messages([{"role": "user", "content": prompt_content}])
+        template = ChatPromptTemplate.from_messages([{"role": "user", "content": prompt_content}])
+        return template.format_messages()
 
     chain = (
         {"context": retriever | RunnableLambda(parse_docs), "question": RunnablePassthrough()}
