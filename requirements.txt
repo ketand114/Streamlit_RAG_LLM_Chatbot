@@ -13,5 +13,4 @@ chromadb
 sentence-transformers
 langchain-huggingface
 torch
-traceback
 operator
