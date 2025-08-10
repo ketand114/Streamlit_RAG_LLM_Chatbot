@@ -20,6 +20,9 @@ from langchain_core.output_parsers import StrOutputParser
 from langchain_core.runnables import RunnablePassthrough, RunnableLambda
 from langchain_huggingface import HuggingFaceEmbeddings
 from sentence_transformers import SentenceTransformer
+from langchain.schema import Document
+import traceback
+from operator import itemgetter
 import torch
 import os
 
@@ -91,12 +94,12 @@ if api_key:
 
 if model:
     
-    st_model = SentenceTransformer("all-MiniLM-L6-v2", device="cpu")
+    #st_model = SentenceTransformer("all-MiniLM-L6-v2", device="cpu")
     # Immediately force move model to CPU (from meta)
     # st_model.to(torch.device("cpu"))
-    embedding_model = HuggingFaceEmbeddings(model_name=None, model=st_model)
+    #embedding_model = HuggingFaceEmbeddings(model_name=None, model=st_model)
     
-    #embedding_model = HuggingFaceEmbeddings(model_name="all-MiniLM-L6-v2")
+    embedding_model = HuggingFaceEmbeddings(model_name="all-MiniLM-L6-v2")
     
     # Load vectorstore from disk instead of recreating it
     vectorstore = Chroma(
@@ -104,48 +107,69 @@ if model:
         embedding_function=embedding_model
     )
 
-    store = InMemoryStore()
-    id_key = "doc_id"
-    retriever = MultiVectorRetriever(vectorstore=vectorstore, docstore=store, id_key=id_key)
+    # --- DEBUG: test retrieval from vectorstore ---
+    ### st.subheader("🔍 Debug: Vectorstore Retrieval Test")
 
-    # Your prompt parsing and chain building (unchanged)
+    ### test_query = st.text_input("Enter a query to test retrieval", "What is your topic?")
+    ### if test_query:
+    ###     retrieved_docs = vectorstore.similarity_search(test_query, k=5)
+    ###     st.write(f"Retrieved {len(retrieved_docs)} documents:")
+    ###     for i, doc in enumerate(retrieved_docs):
+    ###         st.write(f"Document {i+1}:")
+    ###         st.write(doc.page_content[:500])  # Show first 500 chars of each doc
+    # --- End debug ---
+
+
+    # Cleaner parse_docs with expander
     def parse_docs(docs):
-        b64, text = [], []
-        for doc in docs:
-            try:
-                b64decode(doc.page_content)
-                b64.append(doc.page_content)
-            except Exception:
-                text.append(doc)
-        return {"images": b64, "texts": text}
+        with st.expander(f"🔍 Retrieved {len(docs)} documents", expanded=False):
+            for i, doc in enumerate(docs, start=1):
+                st.markdown(f"**Doc {i}:**")
+                if hasattr(doc, "page_content"):
+                    st.code(doc.page_content if doc.page_content else "[EMPTY PAGE CONTENT]")
+                else:
+                    st.code("[NO page_content ATTRIBUTE]")
+        return {"texts": docs}
 
+    # Replace retriever with a RunnableLambda that does similarity_search
+    def run_similarity_search(query):
+        # k=5 to get top 5 docs, adjust as needed
+        results = vectorstore.similarity_search(query, k=5)
+        return results
+
+    # Build prompt with expander
     def build_prompt(kwargs):
         ctx = kwargs["context"]
         question = kwargs["question"]
         context_text = "\n".join([d.page_content for d in ctx["texts"]])
         prompt_template = f"""
-        You are a helpful assistant.
-        Use the following context (which may include text, tables, and image descriptions) to answer:
-        Context:
-        {context_text}
+            You are a helpful assistant.
+            Use the following context (which may include text, summary of tables, and image descriptions) to answer:
+            Context:
+            {context_text}
 
-        Question: {question}
-        """
+            Question: {question}
+            """
 
-        prompt_content = [{"type": "text", "text": prompt_template}]
-        for image in ctx["images"]:
-            prompt_content.append({"type": "image_url", "image_url": {"url": f"data:image/jpeg;base64,{image}"}})
+        with st.expander("📝 Prompt to LLM", expanded=False):
+            st.code(prompt_template)
 
-        template = ChatPromptTemplate.from_messages([{"role": "user", "content": prompt_content}])
-        return template.format_messages()
+        return ChatPromptTemplate.from_messages(
+            [{"role": "user", "content": prompt_template}]
+        ).format_messages()
 
+    # Compose chain using RunnableLambda for similarity_search + parse_docs
     chain = (
-        {"context": retriever | RunnableLambda(parse_docs), "question": RunnablePassthrough()}
+        {
+            "context": itemgetter("question") | RunnableLambda(run_similarity_search) | RunnableLambda(parse_docs),
+            "question": itemgetter("question")
+        }
         | RunnableLambda(build_prompt)
         | model
         | StrOutputParser()
     )
 
+    # Streamlit chat UI
     if "messages" not in st.session_state:
         st.session_state.messages = []
 
@@ -156,11 +180,24 @@ if model:
     if user_input:
         st.session_state.messages.append({"role": "user", "content": user_input})
         st.chat_message("user").write(user_input)
+
+        # Debug retrieval outside chain
+        with st.expander("📝 Debug: Retriever Query and Results", expanded=True):
+            st.write("Query:", user_input)
+            retrieved_docs = vectorstore.similarity_search(user_input, k=5)
+            st.write(f"Retrieved {len(retrieved_docs)} documents:")
+            for i, doc in enumerate(retrieved_docs, start=1):
+                st.markdown(f"**Doc {i}:**")
+                st.code(doc.page_content[:500] if hasattr(doc, "page_content") else "[NO CONTENT]")
+
         try:
-            answer = chain.invoke(user_input)
+            answer = chain.invoke({"question": user_input})
             st.session_state.messages.append({"role": "assistant", "content": answer})
             st.chat_message("assistant").write(answer)
         except Exception as e:
             st.error(f"Error running RAG chain: {e}")
+            st.error(traceback.format_exc())
+
 else:
     st.warning("Please enter your API key and choose a provider.", icon="⚠")
+
