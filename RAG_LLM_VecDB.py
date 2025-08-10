@@ -36,8 +36,6 @@ PERSIST_DIRECTORY = "./chroma_db"
 
 model = None
 
-embedding_model = HuggingFaceEmbeddings(model_name="all-MiniLM-L6-v2")
-
 if api_key:
     try:
         if provider == "OpenAI" and api_key.startswith("sk-"):
@@ -88,6 +86,8 @@ if api_key:
         st.error(f"Error initializing model: {e}")
 
 if model:
+    embedding_model = HuggingFaceEmbeddings(model_name="all-MiniLM-L6-v2")
+    
     # Load vectorstore from disk instead of recreating it
     vectorstore = Chroma(
         persist_directory=PERSIST_DIRECTORY,
