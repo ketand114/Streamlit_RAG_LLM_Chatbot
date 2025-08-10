@@ -20,6 +20,7 @@ from langchain_core.output_parsers import StrOutputParser
 from langchain_core.runnables import RunnablePassthrough, RunnableLambda
 from langchain_huggingface import HuggingFaceEmbeddings
 from sentence_transformers import SentenceTransformer
+import torch
 
 st.title("🧪 Test Chat with Thesis Document")
 
@@ -87,7 +88,9 @@ if api_key:
 
 if model:
     
-    st_model = SentenceTransformer("all-MiniLM-L6-v2", device="cpu")
+    st_model = SentenceTransformer("all-MiniLM-L6-v2")
+    # Immediately force move model to CPU (from meta)
+    st_model.to(torch.device("cpu"))
     embedding_model = HuggingFaceEmbeddings(model_name=None, model=st_model)
     
     #embedding_model = HuggingFaceEmbeddings(model_name="all-MiniLM-L6-v2")
