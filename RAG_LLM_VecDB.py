@@ -88,9 +88,9 @@ if api_key:
 
 if model:
     
-    st_model = SentenceTransformer("all-MiniLM-L6-v2")
+    st_model = SentenceTransformer("all-MiniLM-L6-v2", device="cpu")
     # Immediately force move model to CPU (from meta)
-    st_model.to(torch.device("cpu"))
+    # st_model.to(torch.device("cpu"))
     embedding_model = HuggingFaceEmbeddings(model_name=None, model=st_model)
     
     #embedding_model = HuggingFaceEmbeddings(model_name="all-MiniLM-L6-v2")
