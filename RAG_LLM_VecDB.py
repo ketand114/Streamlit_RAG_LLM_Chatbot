@@ -36,10 +36,7 @@ PERSIST_DIRECTORY = "./chroma_db"
 
 model = None
 
-embedding_model = HuggingFaceEmbeddings(
-    model_name="sentence-transformers/all-MiniLM-L6-v2",
-    model_kwargs={"device": "cpu"}
-)
+embedding_model = HuggingFaceEmbeddings(model_name="all-MiniLM-L6-v2")
 
 if api_key:
     try:
