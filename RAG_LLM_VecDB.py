@@ -21,6 +21,7 @@ from langchain_core.runnables import RunnablePassthrough, RunnableLambda
 from langchain_huggingface import HuggingFaceEmbeddings
 from sentence_transformers import SentenceTransformer
 import torch
+os.environ["PYTORCH_ENABLE_META_TENSOR"] = "0"
 
 st.title("🧪 Test Chat with Thesis Document")
 
