@@ -13,4 +13,3 @@ chromadb
 sentence-transformers
 langchain-huggingface
 torch
-operator
