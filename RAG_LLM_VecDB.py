@@ -86,7 +86,11 @@ if api_key:
         st.error(f"Error initializing model: {e}")
 
 if model:
-    embedding_model = HuggingFaceEmbeddings(model_name="all-MiniLM-L6-v2")
+    
+    st_model = SentenceTransformer("all-MiniLM-L6-v2", device="cpu")
+    embedding_model = HuggingFaceEmbeddings(model_name=None, model=st_model)
+    
+    #embedding_model = HuggingFaceEmbeddings(model_name="all-MiniLM-L6-v2")
     
     # Load vectorstore from disk instead of recreating it
     vectorstore = Chroma(
