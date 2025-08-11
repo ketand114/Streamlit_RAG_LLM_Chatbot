@@ -84,6 +84,7 @@ if api_key:
 
         elif provider == "Perplexity" and api_key.startswith("pplx-"):
             model = ChatPerplexity(
+                openai_api_key="sk-no-openai-needed",  # bypass check
                 perplexity_api_key=api_key,
                 model=model_name or "pplx-7b-online",
                 temperature=0.7
