@@ -85,7 +85,7 @@ if api_key:
         elif provider == "Perplexity" and api_key.startswith("pplx-"):
             model = ChatPerplexity(
                 api_key=api_key,
-                model=model_name or "pplx-7b-online",
+                model=model_name or "sonar-pro",
                 temperature=0.7
             )
         else:
