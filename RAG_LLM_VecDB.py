@@ -94,11 +94,6 @@ if api_key:
 
 if model:
     
-    #st_model = SentenceTransformer("all-MiniLM-L6-v2", device="cpu")
-    # Immediately force move model to CPU (from meta)
-    # st_model.to(torch.device("cpu"))
-    #embedding_model = HuggingFaceEmbeddings(model_name=None, model=st_model)
-    
     embedding_model = HuggingFaceEmbeddings(model_name="all-MiniLM-L6-v2")
     
     # Load vectorstore from disk instead of recreating it
@@ -157,15 +152,6 @@ if model:
     if user_input:
         st.session_state.messages.append({"role": "user", "content": user_input})
         st.chat_message("user").write(user_input)
-
-        # Debug retrieval outside chain
-        with st.expander("📝 Debug: Retriever Query and Results", expanded=True):
-            st.write("Query:", user_input)
-            retrieved_docs = vectorstore.similarity_search(user_input, k=5)
-            st.write(f"Retrieved {len(retrieved_docs)} documents:")
-            for i, doc in enumerate(retrieved_docs, start=1):
-                st.markdown(f"**Doc {i}:**")
-                st.code(doc.page_content[:500] if hasattr(doc, "page_content") else "[NO CONTENT]")
 
         try:
             answer = chain.invoke({"question": user_input})
