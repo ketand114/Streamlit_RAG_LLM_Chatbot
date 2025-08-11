@@ -13,9 +13,9 @@ from langchain_openai import ChatOpenAI, OpenAIEmbeddings
 from langchain_together import ChatTogether
 from langchain_groq import ChatGroq
 from langchain_community.chat_models import ChatHuggingFace
-from langchain_community.chat_models import ChatPerplexity
+#from langchain_community.chat_models import ChatPerplexity
 from langchain_anthropic import ChatAnthropic
-#from langchain_perplexity import ChatPerplexity
+from langchain_perplexity import ChatPerplexity
 from langchain.prompts import ChatPromptTemplate
 from langchain_core.output_parsers import StrOutputParser
 from langchain_core.runnables import RunnablePassthrough, RunnableLambda
