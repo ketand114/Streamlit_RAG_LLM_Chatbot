@@ -107,28 +107,8 @@ if model:
         embedding_function=embedding_model
     )
 
-    # --- DEBUG: test retrieval from vectorstore ---
-    ### st.subheader("🔍 Debug: Vectorstore Retrieval Test")
-
-    ### test_query = st.text_input("Enter a query to test retrieval", "What is your topic?")
-    ### if test_query:
-    ###     retrieved_docs = vectorstore.similarity_search(test_query, k=5)
-    ###     st.write(f"Retrieved {len(retrieved_docs)} documents:")
-    ###     for i, doc in enumerate(retrieved_docs):
-    ###         st.write(f"Document {i+1}:")
-    ###         st.write(doc.page_content[:500])  # Show first 500 chars of each doc
-    # --- End debug ---
-
-
     # Cleaner parse_docs with expander
     def parse_docs(docs):
-        with st.expander(f"🔍 Retrieved {len(docs)} documents", expanded=False):
-            for i, doc in enumerate(docs, start=1):
-                st.markdown(f"**Doc {i}:**")
-                if hasattr(doc, "page_content"):
-                    st.code(doc.page_content if doc.page_content else "[EMPTY PAGE CONTENT]")
-                else:
-                    st.code("[NO page_content ATTRIBUTE]")
         return {"texts": docs}
 
     # Replace retriever with a RunnableLambda that does similarity_search
@@ -150,9 +130,6 @@ if model:
 
             Question: {question}
             """
-
-        with st.expander("📝 Prompt to LLM", expanded=False):
-            st.code(prompt_template)
 
         return ChatPromptTemplate.from_messages(
             [{"role": "user", "content": prompt_template}]
@@ -200,4 +177,3 @@ if model:
 
 else:
     st.warning("Please enter your API key and choose a provider.", icon="⚠")
-
