@@ -29,7 +29,8 @@ import os
 
 os.environ["PYTORCH_ENABLE_META_TENSOR"] = "0"
 
-st.title("🧪 Test Chat with Thesis Document")
+st.title("🧪 Chat with Thesis Document 🧪")
+st.subheader ("Determining Effects Of A Web-Based Teachers’ Professional Development Programme On Teaching Self-Efficacy Beliefs And Classroom Practice - Ketan Satish Deshmukh")
 
 # Sidebar: Choose provider & keys
 provider = st.sidebar.selectbox(
@@ -40,7 +41,7 @@ api_key = st.sidebar.text_input(f"{provider} API Key", type="password")
 model_name = st.sidebar.text_input("Model name (optional)", "")
 
 # Load prebuilt chroma DB path (you must download it from GitHub locally)
-PERSIST_DIRECTORY = "./chroma_db"
+PERSIST_DIRECTORY = "./chroma_db_v2"
 
 model = None
 
@@ -121,6 +122,8 @@ if model:
         prompt_template = f"""
             You are a helpful assistant.
             Use the following context (which may include text, summary of tables, and image descriptions) to answer:
+            Answer the question based only on the following context
+            
             Context:
             {context_text}
 
