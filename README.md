@@ -25,8 +25,7 @@ The current thesis title surfaced in the UI:
 14. Roadmap
 15. Limitations
 16. Contributing
-17. License
-18. Acknowledgements
+17. Acknowledgements
 
 ---
 
@@ -231,12 +230,7 @@ Recommended tooling (suggested):
 
 ---
 
-## 17. License
-If a LICENSE file is absent, the project is effectively “all rights reserved.” Adding a standard OSI-approved license (e.g., MIT or Apache-2.0) is recommended.
-
----
-
-## 18. Acknowledgements
+## 17. Acknowledgements
 - Streamlit for rapid UI.
 - LangChain community integrations.
 - Chroma for vector storage.
