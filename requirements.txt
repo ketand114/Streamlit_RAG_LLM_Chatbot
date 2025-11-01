@@ -3,13 +3,16 @@ openai
 pysqlite3-binary
 langchain
 langchain_core
+langchain-core
 langchain-openai
 langchain-anthropic
 langchain-together
 langchain-perplexity
 langchain-community
+langchain_community
 langchain-groq
 chromadb
 sentence-transformers
 langchain-huggingface
 torch
+langchain_classic
