@@ -7,7 +7,7 @@ import pysqlite3
 sys.modules["sqlite3"] = pysqlite3
 from langchain_community.vectorstores import Chroma
 #from langchain.storage import InMemoryStore
-from lanchain_core.stores import InMemoryStore
+from langchain_core.stores import InMemoryStore
 #from langchain.schema import Document
 from langchain_core.documents import Document
 #from langchain.retrievers.multi_vector import MultiVectorRetriever
