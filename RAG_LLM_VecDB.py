@@ -6,22 +6,27 @@ import sys
 import pysqlite3
 sys.modules["sqlite3"] = pysqlite3
 from langchain_community.vectorstores import Chroma
-from langchain.storage import InMemoryStore
-from langchain.schema import Document
-from langchain.retrievers.multi_vector import MultiVectorRetriever
+#from langchain.storage import InMemoryStore
+from lanchain_core.stores import InMemoryStore
+#from langchain.schema import Document
+from langchain_core.documents import Document
+#from langchain.retrievers.multi_vector import MultiVectorRetriever
+from langchain_classic.retrievers.multi_vector import MultiVectorRetriever
 from langchain_openai import ChatOpenAI, OpenAIEmbeddings
-from langchain_together import ChatTogether
+#from langchain_together import ChatTogether
 from langchain_groq import ChatGroq
 from langchain_community.chat_models import ChatHuggingFace
 #from langchain_community.chat_models import ChatPerplexity
 from langchain_anthropic import ChatAnthropic
 from langchain_perplexity import ChatPerplexity
-from langchain.prompts import ChatPromptTemplate
+#from langchain.prompts import ChatPromptTemplate
+from langchain_classic.prompts import ChatPromptTemplate
 from langchain_core.output_parsers import StrOutputParser
 from langchain_core.runnables import RunnablePassthrough, RunnableLambda
 from langchain_huggingface import HuggingFaceEmbeddings
 from sentence_transformers import SentenceTransformer
-from langchain.schema import Document
+#from langchain.schema import Document
+from langchain_classic.schema import Document
 import traceback
 from operator import itemgetter
 import torch
@@ -35,7 +40,8 @@ st.subheader ("Determining Effects Of A Web-Based Teachers’ Professional Devel
 # Sidebar: Choose provider & keys
 provider = st.sidebar.selectbox(
     "Choose LLM Provider:",
-    ("OpenAI", "Together", "Groq", "Hugging Face", "Anthropic", "Perplexity")
+    ("OpenAI", #"Together", 
+     "Groq", "Hugging Face", "Anthropic", "Perplexity")
 )
 api_key = st.sidebar.text_input(f"{provider} API Key", type="password")
 model_name = st.sidebar.text_input("Model name (optional)", "")
