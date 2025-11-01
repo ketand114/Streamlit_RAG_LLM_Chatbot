@@ -60,17 +60,17 @@ if api_key:
                 temperature=0.7
             )
 
-        elif provider == "Together":
-            model = ChatTogether(
-                together_api_key=api_key,
-                model=model_name or "mistralai/Mistral-7B-Instruct-v0.2",
-                temperature=0.7
-            )
+       # elif provider == "Together":
+       #     model = ChatTogether(
+       #         together_api_key=api_key,
+       #         model=model_name or "mistralai/Mistral-7B-Instruct-v0.2",
+       #         temperature=0.7
+       #     )
 
         elif provider == "Groq":
             model = ChatGroq(
                 groq_api_key=api_key,
-                model_name=model_name or "llama3-8b-8192",
+                model_name=model_name or "llama-3.1-8b-instant",
                 temperature=0.7
             )
 
