@@ -27,6 +27,7 @@ from langchain_huggingface import HuggingFaceEmbeddings
 from sentence_transformers import SentenceTransformer
 #from langchain.schema import Document
 from langchain_classic.schema import Document
+from langchain_chroma import Chroma
 import traceback
 from operator import itemgetter
 import torch
