@@ -35,8 +35,8 @@ import os
 
 os.environ["PYTORCH_ENABLE_META_TENSOR"] = "0"
 
-st.title("🧪 Chat with Thesis Document 🧪")
-st.subheader ("Determining Effects Of A Web-Based Teachers’ Professional Development Programme On Teaching Self-Efficacy Beliefs And Classroom Practice - Ketan Satish Deshmukh")
+st.title("🧪 Conversation with a thesis document 🧪")
+st.subheader (" - by Ketan Satish Deshmukh")
 
 # Sidebar: Choose provider & keys
 provider = st.sidebar.selectbox(
