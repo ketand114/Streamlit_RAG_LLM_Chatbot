@@ -11,6 +11,7 @@ langchain-perplexity
 langchain-community
 langchain_community
 langchain-groq
+langchain_chroma
 chromadb
 sentence-transformers
 langchain-huggingface
