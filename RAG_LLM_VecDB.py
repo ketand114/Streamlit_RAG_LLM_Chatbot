@@ -138,7 +138,7 @@ if model:
 
         return ChatPromptTemplate.from_messages(
             [{"role": "user", "content": prompt_template}]
-        )#.format_messages()
+        ).format_messages()
 
     # Compose chain using RunnableLambda for similarity_search + parse_docs
     chain = (
