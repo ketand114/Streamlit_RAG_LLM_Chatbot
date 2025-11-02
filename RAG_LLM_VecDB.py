@@ -132,7 +132,7 @@ if model:
             Answer the question based only on the following context
             
             Context:
-            {context_text}
+            {context}
 
             Question:
             {question}
