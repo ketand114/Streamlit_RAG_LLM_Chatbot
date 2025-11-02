@@ -126,7 +126,7 @@ if model:
         ctx = kwargs["context"]
         question = kwargs["question"]
         context_text = "\n".join([d.page_content for d in ctx["texts"]])
-        prompt_template = f"""
+        prompt_template = """
             You are a helpful assistant.
             Use the following context (which may include text, summary of tables, and image descriptions) to answer:
             Answer the question based only on the following context
@@ -134,7 +134,8 @@ if model:
             Context:
             {context_text}
 
-            Question: {question}
+            Question:
+            {question}
             """
 
         #return ChatPromptTemplate.from_messages(
@@ -148,11 +149,8 @@ if model:
 
         chat_prompt = ChatPromptTemplate.from_messages(
             [{"role": "user", "content": prompt_template}]
-        )#.format_messages()
+        )        
         
-        # Format messages safely using the kwargs
-        #return chat_prompt.format_messages(context=context_text, question=question)
-    
         return chat_prompt.format_messages(question=question, context=context_text)
 
     # Compose chain using RunnableLambda for similarity_search + parse_docs
