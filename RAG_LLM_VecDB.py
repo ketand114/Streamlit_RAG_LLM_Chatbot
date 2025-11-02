@@ -137,9 +137,17 @@ if model:
             Question: {question}
             """
 
-        return ChatPromptTemplate.from_messages(
-            [{"role": "user", "content": prompt_template}]
-        ).format_messages()
+        #return ChatPromptTemplate.from_messages(
+        #    [{"role": "user", "content": prompt_template}]
+        #).format_messages()
+    
+        # Create ChatPromptTemplate
+        chat_prompt = ChatPromptTemplate.from_messages(
+             [{"role": "user", "content": prompt_template}]
+        )
+    
+        # Format messages safely using the kwargs
+        return chat_prompt.format_messages(context=context_text, question=question)
 
     # Compose chain using RunnableLambda for similarity_search + parse_docs
     chain = (
