@@ -35,7 +35,7 @@ import os
 
 os.environ["PYTORCH_ENABLE_META_TENSOR"] = "0"
 
-st.title("🧪 Conversation with a thesis document 🧪")
+st.title("🧪 Converse with a thesis document 🧪")
 st.subheader (" - by Ketan Satish Deshmukh")
 
 # Sidebar: Choose provider & keys
