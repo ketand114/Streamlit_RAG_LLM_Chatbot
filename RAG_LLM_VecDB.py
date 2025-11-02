@@ -132,7 +132,7 @@ if model:
             Answer the question based only on the following context
             
             Context:
-            {context}
+            {context_text}
 
             Question: {question}
             """
@@ -142,12 +142,18 @@ if model:
         #).format_messages()
     
         # Create ChatPromptTemplate
+        #chat_prompt = ChatPromptTemplate.from_messages(
+        #     [{"role": "user", "content": prompt_template}]
+        #)
+
         chat_prompt = ChatPromptTemplate.from_messages(
-             [{"role": "user", "content": prompt_template}]
-        )
-    
+            [{"role": "user", "content": prompt_template}]
+        )#.format_messages()
+        
         # Format messages safely using the kwargs
-        return chat_prompt.format_messages(context=context_text, question=question)
+        #return chat_prompt.format_messages(context=context_text, question=question)
+    
+        return chat_prompt.format_messages()
 
     # Compose chain using RunnableLambda for similarity_search + parse_docs
     chain = (
