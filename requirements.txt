@@ -1,6 +1,8 @@
 streamlit
 openai
 pysqlite3-binary
+chromadb==0.5.5
+langchain-community==0.3.2
 langchain
 langchain_core
 langchain-core
