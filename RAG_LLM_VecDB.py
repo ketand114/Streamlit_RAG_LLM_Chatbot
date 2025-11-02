@@ -153,7 +153,7 @@ if model:
         # Format messages safely using the kwargs
         #return chat_prompt.format_messages(context=context_text, question=question)
     
-        return chat_prompt.format_messages(question=question)
+        return chat_prompt.format_messages(question=question, context=context_text)
 
     # Compose chain using RunnableLambda for similarity_search + parse_docs
     chain = (
